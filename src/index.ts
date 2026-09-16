@@ -85,9 +85,12 @@ async function start() {
 
   server.listen(PORT, "0.0.0.0", () => {
     console.log(`Fusion Print API running on http://0.0.0.0:${PORT}`);
-    console.log(
-      `Socket.IO enabled | CORS: ${corsOrigin === true ? "reflect any origin" : corsOrigin.join(",")}`
-    );
+    const corsLabel = Array.isArray(corsOrigin)
+      ? corsOrigin.join(",")
+      : corsOrigin === true
+        ? "reflect any origin"
+        : "disabled";
+    console.log(`Socket.IO enabled | CORS: ${corsLabel}`);
   });
 }
 
