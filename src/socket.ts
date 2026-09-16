@@ -3,10 +3,10 @@ import { Server, type Socket } from "socket.io";
 
 let io: Server | null = null;
 
-export function initSocket(httpServer: HttpServer, corsOrigin: string) {
+export function initSocket(httpServer: HttpServer, corsOrigin: boolean | string[]) {
   io = new Server(httpServer, {
     cors: {
-      origin: corsOrigin.split(",").map((s) => s.trim()),
+      origin: corsOrigin,
       credentials: true,
     },
   });

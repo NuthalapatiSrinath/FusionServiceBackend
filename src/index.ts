@@ -19,7 +19,8 @@ import orderRoutes from "./routes/orders";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
-const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
+/** Reflect any Origin (open CORS). cors package handles OPTIONS preflight. */
+const corsOrigin: boolean | string[] = true;
 const uploadDir = path.resolve(process.env.UPLOAD_DIR || "uploads");
 const mongoUri = process.env.MONGODB_URI;
 
@@ -29,7 +30,7 @@ if (!fs.existsSync(uploadDir)) {
 
 app.use(
   cors({
-    origin: corsOrigin.split(",").map((s) => s.trim()),
+    origin: corsOrigin,
     credentials: true,
   })
 );
@@ -82,9 +83,11 @@ async function start() {
   const server = http.createServer(app);
   initSocket(server, corsOrigin);
 
-  server.listen(PORT, () => {
-    console.log(`Fusion Print API running on http://localhost:${PORT}`);
-    console.log(`Socket.IO enabled | CORS: ${corsOrigin}`);
+  server.listen(PORT, "0.0.0.0", () => {
+    console.log(`Fusion Print API running on http://0.0.0.0:${PORT}`);
+    console.log(
+      `Socket.IO enabled | CORS: ${corsOrigin === true ? "reflect any origin" : corsOrigin.join(",")}`
+    );
   });
 }
 
